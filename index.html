@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<meta name="theme-color" content="#081417" />
+<title>霧界繪行者：失圖之海 v0.2</title>
+<style>
+:root{--bg:#071315;--panel:#102326;--line:#294548;--gold:#f0cf72;--mint:#8fd1bc;--text:#eef6ed;--muted:#aebfba;--danger:#e47a6d;--water:#123644;--fog:#d6e2d8}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:#050b0c;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;height:100%;overflow:hidden}
+button{font:inherit;color:inherit}.app{height:100dvh;display:flex;flex-direction:column;background:radial-gradient(circle at 50% 0,#173135 0,#081517 45%,#050b0c 100%)}
+.topbar{height:64px;min-height:64px;display:flex;align-items:center;gap:12px;padding:10px 14px calc(10px + env(safe-area-inset-top));border-bottom:1px solid #213437;background:rgba(6,18,20,.96);z-index:10}.brand{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.08em}.sigil{width:38px;height:38px;border:1px solid #9b8857;border-radius:50%;display:grid;place-items:center;color:var(--gold);box-shadow:inset 0 0 18px #f1cd6d22}.stats{margin-left:auto;display:flex;gap:7px}.stat{min-width:54px;padding:5px 8px;border:1px solid #2c4548;border-radius:12px;text-align:center;background:#0d1d20;font-size:11px;color:var(--muted)}.stat b{display:block;color:var(--gold);font-size:17px}.main{position:relative;flex:1;min-height:0}.screen{position:absolute;inset:0;display:none}.screen.active{display:block}
+#world{overflow:hidden}.map-wrap{position:absolute;inset:0 0 155px;overflow:hidden;background:#0b2429}.map-art{position:absolute;inset:0;width:100%;height:100%}.node{position:absolute;transform:translate(-50%,-50%);border:0;background:none;padding:0;z-index:4;text-align:center}.node .orb{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;margin:auto;border:2px solid #8ecdbb;background:#133236;box-shadow:0 0 0 6px #0b171999,0 0 25px #7ad8bd45;font-size:22px}.node.current .orb{border-color:var(--gold);background:#463d25;box-shadow:0 0 0 7px #211d12aa,0 0 28px #f0cf7270}.node.locked .orb{border-color:#657475;background:#1c2829;color:#8d9997;filter:grayscale(.8);opacity:.72}.node .label{margin-top:5px;font-weight:800;font-size:12px;text-shadow:0 2px 5px #000,0 0 5px #000;white-space:nowrap}.node.locked .label{color:#9fa9a7}.node .tiny{display:block;font-size:9px;color:#bfccc8;font-weight:500}.route{stroke:#b9d4c1;stroke-width:2.2;stroke-dasharray:7 7;opacity:.6}.route.locked{opacity:.15}.fog{fill:url(#foggrad);opacity:.92}.fog-light{fill:#d3ddd5;opacity:.16}.cloud{fill:#e4ece7;opacity:.16}.sea-shine{fill:none;stroke:#76b9c4;stroke-width:2;opacity:.28}
+.map-caption{position:absolute;left:12px;top:12px;right:12px;padding:9px 11px;border:1px solid #385257;border-radius:12px;background:#061416cc;color:#c9d9d4;font-size:12px;z-index:5}.location-card{position:absolute;left:0;right:0;bottom:0;height:155px;padding:13px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#0f2427 0,#081517 100%);border-top:1px solid #2a4549;z-index:6}.eyebrow{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.16em}.loc-row{display:flex;align-items:end;justify-content:space-between;gap:8px}.loc-name{font-size:24px;font-weight:900;margin:3px 0}.loc-desc{font-size:12px;color:#b8c8c3;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:8px;margin-top:10px}.btn{border:1px solid #39595b;background:#153033;border-radius:12px;padding:11px 13px;font-weight:800;flex:1}.btn.primary{background:linear-gradient(135deg,#f3d477,#d6b65a);color:#162021;border-color:#e9cf83}.btn:disabled{opacity:.4}.btn.small{flex:0 0 auto;padding:9px 11px}
+.modal{position:absolute;inset:0;background:#020708cc;z-index:20;display:none;align-items:flex-end}.modal.show{display:flex}.sheet{width:100%;max-height:82%;overflow:auto;background:#0d2023;border:1px solid #385055;border-radius:22px 22px 0 0;padding:16px 14px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -20px 60px #0008}.sheet h2{margin:2px 0 4px;font-size:23px}.sheet p{margin:0 0 13px;color:#abc0ba;font-size:13px}.branch{display:flex;gap:12px;padding:12px;border:1px solid #2b4548;border-radius:14px;margin:9px 0;background:#10292c}.branch .ico{width:45px;height:45px;border-radius:12px;background:#18373a;display:grid;place-items:center;font-size:23px;color:var(--gold);flex:0 0 auto}.branch h3{margin:0 0 3px;font-size:16px}.branch .meta{font-size:11px;color:#93b7ae}.branch .go{margin-left:auto;align-self:center;border:1px solid #53736f;border-radius:10px;background:#1b3b39;padding:8px 10px}.close{float:right;border:1px solid #40585c;background:#11272a;border-radius:50%;width:36px;height:36px;font-size:18px}
+#battle{background:#081719}.battle-head{height:70px;display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #294246;background:#0c1d20}.battle-title b{display:block}.battle-title span{font-size:11px;color:#9db5af}.turn{margin-left:auto;border:1px solid #4c675f;border-radius:12px;padding:7px 10px;font-size:11px;color:#c8d5d0}.turn b{display:block;color:var(--gold);font-size:15px}.battle-field{position:absolute;left:0;right:0;top:70px;bottom:150px;display:flex;align-items:center;justify-content:center;padding:10px;background:radial-gradient(circle at 50% 50%,#1b3939,#071416 72%)}.grid{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(6,1fr);width:min(96vw,620px);aspect-ratio:8/6;border:1px solid #59706d;transform:perspective(800px) rotateX(3deg);box-shadow:0 20px 50px #0007}.cell{position:relative;border:1px solid #314a48;background:#183033;display:grid;place-items:center}.cell:nth-child(odd){background:#142b2e}.cell.wall{background:repeating-linear-gradient(45deg,#28383a,#28383a 5px,#202d2f 5px,#202d2f 10px)}.cell.water{background:#123847}.cell.high{background:#32403b}.cell.exit{box-shadow:inset 0 0 0 3px #7bd4ad88}.cell.reach{box-shadow:inset 0 0 0 3px #efcf7288;background:#3d4028}.unit{width:72%;height:72%;border-radius:50% 50% 45% 45%;display:grid;place-items:center;font-weight:900;font-size:14px;box-shadow:0 5px 9px #0008;position:relative;z-index:2}.unit.hero{background:linear-gradient(#d4f5dc,#72b89f);color:#16302d;border:2px solid #e9fff1}.unit.enemy{background:linear-gradient(#f0a18f,#9a4d4b);color:#361716;border:2px solid #ffd3c8}.unit.chest{border-radius:8px;background:linear-gradient(#f3d477,#9c7936);color:#241b08;border:2px solid #fff2b4}.hp{position:absolute;bottom:-8px;left:5%;right:5%;height:4px;background:#321a1a;border-radius:2px;overflow:hidden}.hp i{display:block;height:100%;background:#bde6bd}.objective{position:absolute;top:8px;left:8px;right:8px;padding:7px 9px;border-radius:9px;background:#061213d8;border:1px solid #2f4a4a;font-size:11px;color:#bfd0cb;pointer-events:none}.battle-ui{position:absolute;left:0;right:0;bottom:0;height:150px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#0a1a1c;border-top:1px solid #2b4145}.selected{font-size:12px;color:#adbfba;margin-bottom:8px;min-height:18px}.battle-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.battle-actions .btn{padding:10px 8px}.log{font-size:10px;color:#8ea39d;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.floatmsg{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);padding:12px 16px;background:#071414ee;border:1px solid #6b8b80;border-radius:13px;font-weight:800;z-index:50;opacity:0;pointer-events:none;transition:.25s}.floatmsg.show{opacity:1;top:42%}
+@media(min-width:800px){.app{max-width:980px;margin:auto;border-left:1px solid #244;border-right:1px solid #244}.map-wrap{bottom:175px}.location-card{height:175px;padding-left:22px;padding-right:22px}.loc-desc{white-space:normal}.sheet{max-width:720px;margin:auto;border-radius:22px 22px 0 0}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="sigil">⌁</div><div class="brand">霧界繪行者</div>
+    <div class="stats"><div class="stat">補給<b id="supply">8</b></div><div class="stat">殘圖<b id="fragments">0</b></div></div>
+  </header>
+  <main class="main">
+    <section id="world" class="screen active">
+      <div class="map-wrap">
+        <div class="map-caption">霧不是邊界。找到殘圖，才能讓「不存在的地方」重新回到世界。</div>
+        <svg class="map-art" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="land" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#456454"/><stop offset="1" stop-color="#263f3b"/></linearGradient>
+            <radialGradient id="foggrad"><stop stop-color="#edf3ee" stop-opacity=".94"/><stop offset=".7" stop-color="#cad6cf" stop-opacity=".82"/><stop offset="1" stop-color="#aabdb4" stop-opacity=".15"/></radialGradient>
+            <filter id="blur"><feGaussianBlur stdDeviation="18"/></filter>
+          </defs>
+          <rect width="1000" height="700" fill="#123745"/>
+          <path d="M0 130 C110 90 180 145 260 130 C345 114 402 65 490 94 C588 126 597 235 680 257 C765 281 816 245 1000 302 L1000 700 L0 700Z" fill="url(#land)"/>
+          <path d="M0 445 C112 386 205 399 284 451 C371 508 455 519 548 489 C627 464 687 418 756 427 C852 441 914 520 1000 512 L1000 700 L0 700Z" fill="#31534b" opacity=".84"/>
+          <path d="M197 355 C300 315 351 340 438 300 C526 258 565 184 650 174 C739 164 793 205 855 189" fill="none" stroke="#1c4d5c" stroke-width="22" opacity=".8"/>
+          <path d="M197 355 C300 315 351 340 438 300 C526 258 565 184 650 174 C739 164 793 205 855 189" fill="none" stroke="#75a8a7" stroke-width="3" opacity=".38"/>
+          <g fill="#1f3834" stroke="#769184" stroke-width="2" opacity=".9">
+            <path d="M410 280 l45-95 45 95z"/><path d="M465 292 l52-124 56 124z"/><path d="M530 278 l36-83 46 83z"/>
+            <path d="M610 135 l42-97 44 97z"/><path d="M662 147 l50-116 58 116z"/><path d="M720 157 l35-80 45 80z"/>
+          </g>
+          <g fill="#17362f" opacity=".95"><circle cx="305" cy="410" r="28"/><circle cx="342" cy="397" r="34"/><circle cx="375" cy="420" r="26"/><circle cx="445" cy="465" r="32"/><circle cx="481" cy="450" r="29"/><circle cx="518" cy="468" r="34"/></g>
+          <path class="sea-shine" d="M40 610 C150 575 210 620 318 594"/><path class="sea-shine" d="M50 650 C180 618 280 662 395 631"/>
+          <g id="routes">
+            <line class="route" x1="180" y1="470" x2="350" y2="410"/>
+            <line class="route locked r-coast" x1="350" y1="410" x2="575" y2="530"/>
+            <line class="route locked r-canyon" x1="350" y1="410" x2="520" y2="250"/>
+            <line class="route locked r-marsh" x1="350" y1="410" x2="440" y2="120"/>
+            <line class="route locked r-sky" x1="520" y1="250" x2="790" y2="205"/>
+          </g>
+          <g id="fogShapes" filter="url(#blur)">
+            <ellipse id="fog-east" class="fog" cx="770" cy="370" rx="310" ry="330"/>
+            <ellipse id="fog-north" class="fog-light" cx="460" cy="80" rx="240" ry="140"/>
+          </g>
+          <g class="cloud"><ellipse cx="840" cy="100" rx="95" ry="35"/><ellipse cx="900" cy="130" rx="120" ry="42"/></g>
+          <g opacity=".5"><path d="M828 135 l42-50 42 50 -18 7 0 30 -48 0 0-30z" fill="#bdcfca"/><path d="M852 80 l18-34 18 34" fill="none" stroke="#c9d8d3" stroke-width="5"/></g>
+        </svg>
+        <button class="node current" data-id="camp" style="left:18%;top:67%"><span class="orb">⌂</span><span class="label">薄霧前哨<span class="tiny">安全據點</span></span></button>
+        <button class="node" data-id="rail" style="left:35%;top:59%"><span class="orb">╫</span><span class="label">斷軌丘陵<span class="tiny">地堡・隧道</span></span></button>
+        <button class="node locked" data-id="coast" style="left:58%;top:75%"><span class="orb">≈</span><span class="label">潮痕海岸<span class="tiny">海窟・沉船</span></span></button>
+        <button class="node locked" data-id="canyon" style="left:52%;top:38%"><span class="orb">△</span><span class="label">赤脊斷谷<span class="tiny">山洞・斜井</span></span></button>
+        <button class="node locked" data-id="marsh" style="left:44%;top:18%"><span class="orb">⚑</span><span class="label">沉旗濕地<span class="tiny">地堡群・根迷宮</span></span></button>
+        <button class="node locked" data-id="sky" style="left:80%;top:30%"><span class="orb">⇧</span><span class="label">雲梯遺址<span class="tiny">風壓隧道・雲港</span></span></button>
+      </div>
+      <div class="location-card">
+        <div class="eyebrow" id="kind">繪界者據點</div>
+        <div class="loc-row"><div class="loc-name" id="locName">薄霧前哨</div><button class="btn small" id="restBtn">整備</button></div>
+        <div class="loc-desc" id="locDesc">舊燈塔腳下的前哨。殘圖會在這裡重新定向，讓失去的地域重新出現。</div>
+        <div class="actions"><button class="btn primary" id="exploreBtn">探索支線</button><button class="btn" id="mapBtn">解析殘圖</button></div>
+      </div>
+    </section>
+
+    <section id="battle" class="screen">
+      <div class="battle-head"><button class="btn small" id="retreatBtn">撤退</button><div class="battle-title"><b>崩塌隧道</b><span>奪圖撤離戰</span></div><div class="turn">回合<b id="turnNo">1</b></div></div>
+      <div class="battle-field"><div class="objective" id="objective">目標：取得地圖匣，再讓攜帶者回到左側撤離格。</div><div class="grid" id="grid"></div></div>
+      <div class="battle-ui"><div class="selected" id="selectedText">點選角色，再點可到達的格子。</div><div class="battle-actions"><button class="btn" id="moveBtn">移動</button><button class="btn" id="attackBtn">攻擊</button><button class="btn primary" id="endBtn">結束回合</button></div><div class="log" id="log">隧道深處有微弱金光。</div></div>
+    </section>
+  </main>
+</div>
+<div class="modal" id="branchModal"><div class="sheet"><button class="close" id="closeSheet">×</button><div class="eyebrow">支線空間</div><h2 id="sheetTitle">薄霧前哨</h2><p>支線是藏在世界地形裡的「可進入空間」；它們可以彼此連通、繞道、改寫世界路徑。</p><div id="branchList"></div></div></div>
+<div class="floatmsg" id="floatmsg"></div>
+<script>
+(()=>{"use strict";
+const nodes={
+ camp:{name:"薄霧前哨",kind:"繪界者據點",desc:"舊燈塔腳下的前哨。殘圖會在這裡重新定向，讓失去的地域重新出現。",branches:[{name:"舊燈塔地窖",type:"地窖",risk:"低",icon:"⌂",locked:true}]},
+ rail:{name:"斷軌丘陵",kind:"地表交通遺構",desc:"廢鐵道只是表面。山腹裡埋著軍用地堡、轉運層與崩塌隧道。",branches:[{name:"崩塌隧道",type:"隧道",risk:"中",icon:"▰",play:true},{name:"零號軍用地堡",type:"地堡",risk:"高",icon:"▣",locked:true}]},
+ coast:{name:"潮痕海岸",kind:"潮汐聚落遺址",desc:"退潮會露出海窟與沉船道路；漲潮後，某些入口會完全消失。",branches:[{name:"退潮海窟",type:"海窟",risk:"中",icon:"◒"},{name:"沉船墓場",type:"水下廢墟",risk:"高",icon:"⚓",locked:true}]},
+ canyon:{name:"赤脊斷谷",kind:"山地裂谷",desc:"崖壁中有會鳴響的洞窟，也有走私者留下的斜井捷徑。",branches:[{name:"鳴石洞窟",type:"山洞",risk:"中",icon:"⬡"},{name:"走私者斜井",type:"隧道",risk:"高",icon:"╱"}]},
+ marsh:{name:"沉旗濕地",kind:"舊戰線沼澤",desc:"水面下埋著彼此連鎖的地堡群，盤根則會在夜裡改變道路。",branches:[{name:"沉沒連鎖地堡",type:"地堡群",risk:"中",icon:"▦"},{name:"盤根迷宮",type:"生態迷宮",risk:"未知",icon:"⌘"}]},
+ sky:{name:"雲梯遺址",kind:"天空航路基座",desc:"巨型升降塔貫穿雲層，內部風壓隧道可直通廢棄雲港。",branches:[{name:"風壓隧道",type:"天空隧道",risk:"中",icon:"↝"},{name:"廢棄雲港",type:"天空碼頭",risk:"高",icon:"◇"}]}
+};
+const links={camp:["rail"],rail:["camp","coast","canyon","marsh"],coast:["rail"],canyon:["rail","sky"],marsh:["rail"],sky:["canyon"]};
+let state=JSON.parse(localStorage.getItem("mist-v02")||"null")||{loc:"camp",supply:8,fragments:0,unlocked:["camp","rail"],completed:[],bag:[]};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function save(){localStorage.setItem("mist-v02",JSON.stringify(state))}function toast(t){let e=$("#floatmsg");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1450)}
+function renderWorld(){let n=nodes[state.loc];$("#supply").textContent=state.supply;$("#fragments").textContent=state.fragments;$("#kind").textContent=n.kind;$("#locName").textContent=n.name;$("#locDesc").textContent=n.desc;$$('.node').forEach(b=>{let id=b.dataset.id;b.classList.toggle('current',id===state.loc);b.classList.toggle('locked',!state.unlocked.includes(id))});
+ ["coast","canyon","marsh","sky"].forEach(id=>{let u=state.unlocked.includes(id);document.querySelectorAll('.r-'+id).forEach(e=>e.classList.toggle('locked',!u))});
+ let known=state.unlocked.length;$("#fog-east").style.opacity=Math.max(.12,1-(known-2)*.2);}
+$$('.node').forEach(b=>b.addEventListener('click',()=>{let id=b.dataset.id;if(!state.unlocked.includes(id)){toast('霧後只有模糊輪廓，需要對應殘圖');return}if(id===state.loc)return; if(!(links[state.loc]||[]).includes(id)){toast('目前沒有直通道路');return}if(state.supply<=0){toast('補給不足，先回前哨整備');return}state.loc=id;state.supply--;save();renderWorld();toast('抵達 '+nodes[id].name)}));
+$("#restBtn").onclick=()=>{if(state.loc!=='camp'){toast('只能在薄霧前哨完整整備');return}state.supply=8;save();renderWorld();toast('補給已補滿')};
+$("#exploreBtn").onclick=()=>{let n=nodes[state.loc];$("#sheetTitle").textContent=n.name;let box=$("#branchList");box.innerHTML='';n.branches.forEach(br=>{let d=document.createElement('div');d.className='branch';d.innerHTML=`<div class="ico">${br.icon}</div><div><h3>${br.name}</h3><div class="meta">${br.type} ・ 風險 ${br.risk}${br.locked?' ・ 尚未取得進入條件':''}</div></div><button class="go">${br.locked?'封鎖':'進入'}</button>`;d.querySelector('button').onclick=()=>{if(br.locked){toast('目前入口無法通行');return}if(br.play){$("#branchModal").classList.remove('show');startBattle()}else toast('這條支線會在下一版接上完整探索')};box.appendChild(d)});$("#branchModal").classList.add('show')};
+$("#closeSheet").onclick=()=>$("#branchModal").classList.remove('show');
+$("#mapBtn").onclick=()=>{if(state.fragments<=0){toast('還沒有可解析的殘圖');return}let pool=['coast','canyon','marsh'].filter(x=>!state.unlocked.includes(x));if(!pool.length&&state.unlocked.includes('canyon')&&!state.unlocked.includes('sky'))pool=['sky'];if(!pool.length){toast('目前可辨識的殘圖都已拼回世界');return}let id=pool[Math.floor(Math.random()*pool.length)];state.unlocked.push(id);state.fragments--;save();renderWorld();toast('迷霧退開：'+nodes[id].name+' 回到世界')};
+
+const W=8,H=6,walls=new Set(['3,1','3,2','3,3','5,4']),waters=new Set(['1,4','2,4','4,0','5,0']),highs=new Set(['6,1','6,2']);
+let battle=null;function key(x,y){return x+','+y}function man(a,b){return Math.abs(a.x-b.x)+Math.abs(a.y-b.y)}function occupied(x,y,except){return battle.units.some(u=>u.hp>0&&u!==except&&u.x===x&&u.y===y)|| (battle.chest.active&&battle.chest.x===x&&battle.chest.y===y)}
+function startBattle(){battle={turn:1,phase:'player',mode:'move',selected:null,carrying:false,chest:{x:6,y:3,active:true},units:[{id:'yan',name:'燕',team:'hero',x:0,y:1,hp:7,max:7,move:3,atk:3},{id:'pan',name:'磐',team:'hero',x:0,y:3,hp:10,max:10,move:2,atk:2},{id:'raider1',name:'掠奪者',team:'enemy',x:5,y:2,hp:5,max:5,move:2,atk:2},{id:'raider2',name:'弩手',team:'enemy',x:7,y:4,hp:4,max:4,move:2,atk:2}]};$("#world").classList.remove('active');$("#battle").classList.add('active');renderBattle()}
+function reachable(u){let out=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++){if(walls.has(key(x,y))||occupied(x,y,u))continue;if(man(u,{x,y})<=u.move)out.push(key(x,y))}return new Set(out)}
+function renderBattle(){let g=$("#grid");g.innerHTML='';let reach=battle.selected&&battle.mode==='move'?reachable(battle.selected):new Set();for(let y=0;y<H;y++)for(let x=0;x<W;x++){let c=document.createElement('div');c.className='cell';if(walls.has(key(x,y)))c.classList.add('wall');if(waters.has(key(x,y)))c.classList.add('water');if(highs.has(key(x,y)))c.classList.add('high');if(x===0&&y===2)c.classList.add('exit');if(reach.has(key(x,y)))c.classList.add('reach');let u=battle.units.find(q=>q.hp>0&&q.x===x&&q.y===y);if(u){let e=document.createElement('div');e.className='unit '+u.team;e.textContent=u.name[0];e.innerHTML+=`<span class="hp"><i style="width:${u.hp/u.max*100}%"></i></span>`;c.appendChild(e)}else if(battle.chest.active&&battle.chest.x===x&&battle.chest.y===y){let e=document.createElement('div');e.className='unit chest';e.textContent='圖';c.appendChild(e)}c.onclick=()=>cellTap(x,y);g.appendChild(c)}$("#turnNo").textContent=battle.turn;$("#selectedText").textContent=battle.selected?`${battle.selected.name}｜HP ${battle.selected.hp}/${battle.selected.max}｜模式：${battle.mode==='move'?'移動':'攻擊'}`:'點選角色，再點可到達的格子。';$("#objective").textContent=battle.carrying?'目標：已取得地圖匣！讓任一英雄抵達左側綠色撤離格。':'目標：取得右側金色地圖匣，再撤回左側出口。'}
+function cellTap(x,y){if(battle.phase!=='player')return;let u=battle.units.find(q=>q.hp>0&&q.x===x&&q.y===y);if(u&&u.team==='hero'){battle.selected=u;renderBattle();return}if(!battle.selected)return;if(battle.mode==='move'){if(reachable(battle.selected).has(key(x,y))){battle.selected.x=x;battle.selected.y=y;if(battle.chest.active&&man(battle.selected,battle.chest)<=1){battle.chest.active=false;battle.carrying=true;log('取得地圖匣！現在撤回入口。')}if(battle.carrying&&x===0&&y===2){winBattle();return}renderBattle()}}else{if(u&&u.team==='enemy'&&man(battle.selected,u)<=1){u.hp-=battle.selected.atk;log(`${battle.selected.name} 對 ${u.name} 造成 ${battle.selected.atk} 傷害`);if(u.hp<=0)log(u.name+' 被擊倒');renderBattle()}}}
+function log(t){$("#log").textContent=t}$("#moveBtn").onclick=()=>{if(battle){battle.mode='move';renderBattle()}};$("#attackBtn").onclick=()=>{if(battle){battle.mode='attack';renderBattle()}};
+$("#endBtn").onclick=()=>{if(!battle||battle.phase!=='player')return;enemyTurn()};function enemyTurn(){battle.phase='enemy';log('敵方正在行動…');setTimeout(()=>{for(const e of battle.units.filter(u=>u.team==='enemy'&&u.hp>0)){let hs=battle.units.filter(u=>u.team==='hero'&&u.hp>0);if(!hs.length){loseBattle();return}let t=hs.sort((a,b)=>man(e,a)-man(e,b))[0];if(man(e,t)<=1){t.hp-=e.atk;log(`${e.name} 攻擊 ${t.name}，造成 ${e.atk} 傷害`)}else{let dx=Math.sign(t.x-e.x),dy=Math.sign(t.y-e.y);let opts=[[e.x+dx,e.y],[e.x,e.y+dy],[e.x+dx,e.y+dy]].filter(([x,y])=>x>=0&&x<W&&y>=0&&y<H&&!walls.has(key(x,y))&&!occupied(x,y,e));if(opts.length){e.x=opts[0][0];e.y=opts[0][1]}}}battle.units.filter(u=>u.team==='hero'&&u.hp<=0).forEach(()=>{});if(!battle.units.some(u=>u.team==='hero'&&u.hp>0)){loseBattle();return}battle.phase='player';battle.turn++;battle.selected=null;renderBattle()},500)}
+function winBattle(){if(!state.completed.includes('tunnel'))state.completed.push('tunnel');state.fragments+=2;state.bag.push('軍用權限印記');save();toast('任務成功：取得 2 張殘圖');setTimeout(()=>{battle=null;$("#battle").classList.remove('active');$("#world").classList.add('active');renderWorld()},1000)}function loseBattle(){toast('隊伍失去戰鬥能力');setTimeout(()=>{battle=null;$("#battle").classList.remove('active');$("#world").classList.add('active')},900)}
+$("#retreatBtn").onclick=()=>{battle=null;$("#battle").classList.remove('active');$("#world").classList.add('active');toast('撤回世界地圖')};
+renderWorld();
+})();
+</script>
+</body>
+</html>
